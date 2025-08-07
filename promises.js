@@ -126,3 +126,32 @@ lanciaDado()
 //#🎯 Bonus: HOF con closure per memorizzare l'ultimo lancio
 // Modifica la funzione in creaLanciaDado(), che restituisce una closure che memorizza l'ultimo risultato. 
 // Se il numero esce due volte di fila, stampa "Incredibile!".
+function creaLanciaDado() {
+    let lastNum = null;
+    return function lanciaDado() {
+        return new Promise ((resolve, reject) => {
+            setTimeout(() => {
+                const rand = Math.random();
+                if (rand < 0.2) {
+                    reject("Il dado si è incastrato");
+                } else {
+                    const num = Math.floor(rand * 6) + 1;
+                    const repeat = num === lastNum;
+                    lastNum = num;
+                    resolve({ value: num, repeat });
+                }
+            }, 3000);
+        })
+    }
+}
+
+const lanciaDado = creaLanciaDado();
+lanciaDado()
+    .then(result => {
+    if (result.repeat) {
+        console.log(`Incredibile è uscito di nuovo ${result.value}`);
+    } else {
+        console.log(`È uscito il numero: ${result.value}`);
+    }
+})
+    .catch(err => console.log(`Ops... C'è stato un errore: ${err}`));
