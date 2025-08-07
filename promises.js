@@ -4,27 +4,27 @@
 // e restituisce una Promise che recupera il titolo di un post dal link https://dummyjson.com/posts/{id}
 
 function getPostTitle(id) {
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         fetch(`https://dummyjson.com/posts/${id}`)
-        .then(response => {
-            if (!response.ok) {
-                // Se la risposta non è OK (es. 404, 500), rifiuta la promise
-                // con un messaggio di errore più specifico basato sullo stato.
-                return reject(new Error(`Errore HTTP! Stato: ${response.status} - Impossibile trovare il post con ID ${id}.`));
-            }
-            return response.json(); // Parsa il corpo JSON
+            .then(response => {
+                if (!response.ok) {
+                    // Se la risposta non è OK (es. 404, 500), rifiuta la promise
+                    // con un messaggio di errore più specifico basato sullo stato.
+                    return reject(new Error(`Errore HTTP! Stato: ${response.status} - Impossibile trovare il post con ID ${id}.`));
+                }
+                return response.json(); // Parsa il corpo JSON
             })
-        .then(post => {
-            if (post && post.title) {
-                resolve(post.title); // Risolvi con il titolo del post
-            } else {
-                reject(new Error(`Il post con ID ${id} non contiene un titolo valido.`));
-            }
-        })
-        .catch(error => {
-            // Cattura eventuali errori di rete o problemi durante l'operazione di fetch
-            reject(new Error(`Errore nella richiesta per il post con ID ${id}: ${error.message}`));
-        });
+            .then(post => {
+                if (post && post.title) {
+                    resolve(post.title); // Risolvi con il titolo del post
+                } else {
+                    reject(new Error(`Il post con ID ${id} non contiene un titolo valido.`));
+                }
+            })
+            .catch(error => {
+                // Cattura eventuali errori di rete o problemi durante l'operazione di fetch
+                reject(new Error(`Errore nella richiesta per il post con ID ${id}: ${error.message}`));
+            });
     });
 }
 
@@ -104,15 +104,15 @@ getPost(9999)
 //* 🏆 Snack 2
 // Crea la funzione lanciaDado() che restituisce una Promise che, dopo 3 secondi, 
 // genera un numero casuale tra 1 e 6. Tuttavia, nel 20% dei casi, il dado si "incastra" e la Promise va in reject.
-function lanciaDado () {
-    return new Promise ((resolve, reject) => {
-        setTimeout (() => {
+function lanciaDado() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
             const rand = Math.random();
             if (rand < 0.2) {
-                reject ("Il dado si è incastrato");
+                reject("Il dado si è incastrato");
             } else {
-                const num = Math.floor(rand *6)+1;
-                resolve(num) 
+                const num = Math.floor(rand * 6) + 1;
+                resolve(num)
             }
 
         }, 3000)
@@ -121,7 +121,7 @@ function lanciaDado () {
 
 lanciaDado()
     .then(num => console.log(`è uscito il numero: ${num}`))
-    .catch(err => console.log(`Ops... C'è stato un errore: ${err}`));
+    .catch(err => console.error(`Ops... C'è stato un errore: ${err}`));
 
 //#🎯 Bonus: HOF con closure per memorizzare l'ultimo lancio
 // Modifica la funzione in creaLanciaDado(), che restituisce una closure che memorizza l'ultimo risultato. 
@@ -129,7 +129,7 @@ lanciaDado()
 function creaLanciaDado() {
     let lastNum = null;
     return function lanciaDado() {
-        return new Promise ((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             setTimeout(() => {
                 const rand = Math.random();
                 if (rand < 0.2) {
@@ -148,10 +148,10 @@ function creaLanciaDado() {
 const lanciaDado = creaLanciaDado();
 lanciaDado()
     .then(result => {
-    if (result.repeat) {
-        console.log(`Incredibile è uscito di nuovo ${result.value}`);
-    } else {
-        console.log(`È uscito il numero: ${result.value}`);
-    }
-})
-    .catch(err => console.log(`Ops... C'è stato un errore: ${err}`));
+        if (result.repeat) {
+            console.log(`Incredibile è uscito di nuovo ${result.value}`);
+        } else {
+            console.log(`È uscito il numero: ${result.value}`);
+        }
+    })
+    .catch(err => console.error(`Ops... C'è stato un errore: ${err}`));
